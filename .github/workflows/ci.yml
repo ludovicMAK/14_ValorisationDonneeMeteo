@@ -1,4 +1,4 @@
-name: Run backend & frontend tests
+name: CI
 on:
   push:
     branches:
@@ -7,7 +7,7 @@ on:
 
 
 jobs:
-  test-backend:
+  test:
     runs-on: ubuntu-24.04
 
     steps:
@@ -65,7 +65,9 @@ jobs:
 
       - name: Run backend linter
         working-directory: backend
-        run: uv run flake8
+        run: |
+          uv run ruff check .
+          uv run ruff format .
 
       - uses: actions/setup-node@v4
         with:
