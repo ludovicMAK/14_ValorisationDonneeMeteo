@@ -67,6 +67,9 @@ jobs:
         working-directory: backend
         run: |
           uv run ruff check . --fix
+          git add .
+          git commit -m "style: fix linting and formatting"
+          git push
           uv run ruff format --check
 
       - uses: actions/setup-node@v4
