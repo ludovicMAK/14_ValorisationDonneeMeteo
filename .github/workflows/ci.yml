@@ -32,14 +32,12 @@ jobs:
         working-directory: backend
         run: uv run pytest
 
-      # Setup Node.js for frontend
       - uses: actions/setup-node@v4
         with:
           node-version: '24'
           cache: 'npm'
           cache-dependency-path: 'frontend/package-lock.json'
 
-      # Install frontend dependencies
       - name: Install frontend dependencies
         run: |
           cd frontend
@@ -48,3 +46,38 @@ jobs:
       - name: Run frontend tests
         working-directory: frontend
         run: npm run test:ci
+  linter:
+    runs-on: ubuntu-24.04
+
+    steps:
+
+      - name: checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install uv
+        run: curl -LsSf https://astral.sh/uv/install.sh | sh
+
+      - name: Install dependencies
+        working-directory: backend
+        run: |
+          uv sync --extra dev
+          cp .env.example .env
+
+      - name: Run backend linter
+        working-directory: backend
+        run: uv run flake8
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: 'npm'
+          cache-dependency-path: 'frontend/package-lock.json'
+
+      - name: Install frontend dependencies
+        run: |
+          cd frontend
+          npm ci --legacy-peer-deps
+
+      - name: Run frontend linter
+        working-directory: frontend
+        run: npm run lint
