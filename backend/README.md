@@ -226,8 +226,8 @@ uv run pytest
 ### Linting
 
 ```bash
-uv run ruff check . --fix
-uv run ruff format . --check
+uv run ruff check .
+uv run ruff format .
 ```
 
 
